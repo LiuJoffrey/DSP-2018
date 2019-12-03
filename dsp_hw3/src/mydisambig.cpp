@@ -42,7 +42,11 @@ void print_map(map<string, set<string>> &mapping){
 void find_all_nodes(vector<string> in_line, map<string, set<string>> mapping, vector<set<string>> &all_nodes){
     set<string> tmp_set;
     map<string, set<string>>::iterator iter;
-
+    /*--------------------------*/
+    tmp_set.clear();
+    tmp_set.insert("<s>");
+    all_nodes.push_back(tmp_set);
+    
     for(int i=0; i<in_line.size(); i++){
         tmp_set.clear();
         iter = mapping.find(in_line.at(i));
@@ -56,6 +60,10 @@ void find_all_nodes(vector<string> in_line, map<string, set<string>> mapping, ve
         //cout<<endl;
         all_nodes.push_back(tmp_set);
     }
+    /*--------------------------*/
+    tmp_set.clear();
+    tmp_set.insert("</s>");
+    all_nodes.push_back(tmp_set);
 }
 
 void print_vec_set(vector<set<string>> &all_nodes){
@@ -121,8 +129,11 @@ void find_best_line(vector<set<string>> all_nodes, Ngram &lm, Vocab &vocab, vect
         start.push_back(*iter);
         path_prob.push_back(make_pair(start, 0.0)); // 0.0 should be change for 1-gram probility
     }
+    //start.clear();
+    //start.push_back("<s>");
+    //path_prob.push_back(make_pair(start, 0.0));
 
-    for(int i=1; i<all_nodes.size(); i++){
+    for(int i=1; i<all_nodes.size(); i++){ // i=0
         vector<pair<vector<string>, double>> next_path_prob;
         next_path_prob.clear();
         for(iter=all_nodes.at(i).begin(); iter!=all_nodes.at(i).end(); iter++){
@@ -132,6 +143,8 @@ void find_best_line(vector<set<string>> all_nodes, Ngram &lm, Vocab &vocab, vect
         path_prob.clear();
         path_prob = next_path_prob;
     }
+
+    //next_path_prob.clear();
     
     double max_prob = -10000.0;
     int max_prob_idx = -1;
@@ -219,7 +232,7 @@ int main(int argc, char* argv[]){
 
         find_all_nodes(split_line, mapping, all_nodes);
         //print_vec_set(all_nodes);
-        
+        //exit(1);
         find_best_line(all_nodes, lm, vocab, max_prob_line);
         
         //cout<<"<s>";
@@ -228,12 +241,15 @@ int main(int argc, char* argv[]){
         //}
         //cout<<" </s>"<<endl;
        
-        fprintf(fp, "<s>");
-        for(int i=0; i<max_prob_line.size(); i++){
-            fprintf(fp, " ");
+        //fprintf(fp, "<s>");
+        for(int i=0; i<max_prob_line.size()-1; i++){
+            //fprintf(fp, " ");
             fprintf(fp, max_prob_line.at(i).c_str());
+            fprintf(fp, " ");
         }
-        fprintf(fp, " </s>\n");
+        fprintf(fp, max_prob_line.at(max_prob_line.size()-1).c_str());
+        fprintf(fp, "\n");
+        //fprintf(fp, "</s>\n");
         
         
     }
