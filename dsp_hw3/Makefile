@@ -16,13 +16,22 @@ FROM ?= Big5-ZhuYin.map
 TO ?= ZhuYin-Big5.map
 .PHONY: all clean map
 
+TRITARGET = trigram
+TRISRC = trigram.cpp
+TRIOBJ = $(TRISRC:.cpp=.o)
+
 $(TARGET): $(OBJ) -loolm -ldstruct -lmisc
 	$(CXX) $(LDFLAGS) -o $@ $^
 
 %.o: %.cpp
 	$(CXX) $(CXXFLAGS) -c $<
 
+$(TRITARGET): $(TRIOBJ) -loolm -ldstruct -lmisc
+	$(CXX) $(LDFLAGS) -o $@ $^
+
 all: $(TARGET)
+
+trigram: $(TRITARGET)
 
 map:
 	python3 $(SRC_PATH)/mapping.py $(FROM) $(TO)
@@ -30,3 +39,4 @@ map:
 
 clean:
 	$(RM) $(OBJ) $(TARGET)
+	$(RM) $(TRIOBJ) $(TRITARGET)
