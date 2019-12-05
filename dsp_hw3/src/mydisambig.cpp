@@ -9,7 +9,7 @@
 #include "Vocab.h"
 
 using namespace std;
-
+/*For big5 encoding read file*/
 void ReadMappingFile(char* map_file, map<string, set<string>> &mapping){
     //cout<<"In read map function";
     string str, zh, word;
