@@ -269,13 +269,25 @@ void find_best_line(vector<set<string>> all_nodes, Ngram &lm, Vocab &vocab, vect
         next_path_prob.clear();
         //cout<<"size: "<<all_nodes.at(i).size()<<endl;
         //exit(1);
-        /*if(all_nodes.at(i).size() == 1){
+        if(all_nodes.at(i).size() == 1){
             for(iter=all_nodes.at(i).begin(); iter!=all_nodes.at(i).end(); iter++){
+                vector<string>::iterator one_w_iter;
                 for(int j=0; j<path_prob.size(); j++){
+                    //path_prob.at(j).first.push_back(*iter);
+                    one_w_iter = path_prob.at(j).first.end();
+                    one_w_iter -= 1; // get final word of the path
+                    string pre_word = *one_w_iter;
+                    one_w_iter -= 1;
+                    string pre_2_word = *one_w_iter;
+                    string cur_word = *iter;
+                    double pre_prob = path_prob.at(j).second;
+                    double cur_tri_prob = get_trigram_prob(pre_2_word.c_str(), pre_word.c_str(), cur_word.c_str(), lm, vocab);
+
                     path_prob.at(j).first.push_back(*iter);
+                    path_prob.at(j).second = pre_prob + cur_tri_prob;
                 }
             }
-        }else{*/
+        }else{
         for(iter=all_nodes.at(i).begin(); iter!=all_nodes.at(i).end(); iter++){    
             pair<vector<string>, double> cur_best = find_best_trigram(path_prob, *iter, lm, vocab);
             next_path_prob.push_back(cur_best);
@@ -283,7 +295,7 @@ void find_best_line(vector<set<string>> all_nodes, Ngram &lm, Vocab &vocab, vect
         }
         path_prob.clear();
         path_prob = next_path_prob;
-        //}
+        }
     }
 
     //next_path_prob.clear();
