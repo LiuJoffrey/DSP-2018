@@ -142,10 +142,10 @@ pair<vector<string>, double> find_best_bigram(vector<pair<vector<string>, double
     best_path.first.push_back(cur_word);
     best_path.second = max_prob;
 
-    for(int i=0; i<best_path.first.size(); i++){
+    /*for(int i=0; i<best_path.first.size(); i++){
         cout<<best_path.first.at(i)<<" ";
     }
-    cout<<best_path.second<<endl;
+    cout<<best_path.second<<endl;*/
     return best_path;
 
 }
@@ -168,17 +168,17 @@ pair<vector<string>, double> find_best_trigram(vector<pair<vector<string>, doubl
         string pre_2_word = *iter;
         double pre_prob = path_prob.at(i).second;
         double cur_tri_prob = get_trigram_prob(pre_2_word.c_str(), pre_word.c_str(), cur_word.c_str(), lm, vocab);
-        double cur_bi_prob = get_bigram_prob(pre_word.c_str(), cur_word.c_str(), lm, vocab);
+        //double cur_bi_prob = get_bigram_prob(pre_word.c_str(), cur_word.c_str(), lm, vocab);
         //double pre_bi_prob = get_bigram_prob(pre_2_word.c_str(), pre_word.c_str(), lm, vocab);
         
         if(cur_tri_prob == LogP_Zero){
             //cout<<"LogP_Zero"<<endl;
             cur_tri_prob = LogP_PseudoZero;
         }
-        if(cur_bi_prob == LogP_Zero){
+        /*if(cur_bi_prob == LogP_Zero){
             //cout<<"LogP_Zero"<<endl;
             cur_bi_prob = LogP_PseudoZero;
-        }
+        }*/
         //if(pre_bi_prob == LogP_Zero){
             //cout<<"LogP_Zero"<<endl;
         //    pre_bi_prob = LogP_PseudoZero;
@@ -197,7 +197,7 @@ pair<vector<string>, double> find_best_trigram(vector<pair<vector<string>, doubl
         }else{
             cur_prob = cur_bi_prob;
         }*/
-        cur_prob = cur_tri_prob *1.0 + cur_bi_prob *0.0;// + pre_bi_prob *0.0;
+        cur_prob = cur_tri_prob *1.0;// + cur_bi_prob *0.0;// + pre_bi_prob *0.0;
         
         //cout<<pre_2_word<<" "<<pre_word<<" "<<cur_word<<" "<<pre_bi_prob<<cur_bi_prob<<cur_prob<<endl;
         
@@ -224,10 +224,10 @@ pair<vector<string>, double> find_best_trigram(vector<pair<vector<string>, doubl
         best_path.second = max_prob;
     }*/
 
-    for(int i=0; i<best_path.first.size(); i++){
+    /*for(int i=0; i<best_path.first.size(); i++){
         cout<<best_path.first.at(i)<<" ";
     }
-    cout<<best_path.second<<endl;
+    cout<<best_path.second<<endl;*/
 
     //exit(1);
     return best_path;
@@ -263,7 +263,7 @@ void find_best_line(vector<set<string>> all_nodes, Ngram &lm, Vocab &vocab, vect
     }
     //cout<<all_nodes.at(1).size()<<" "<<path_prob.size()<<endl;
     //exit(1);
-    cout<<"=============="<<endl;
+    //cout<<"=============="<<endl;
     for(int i=2; i<all_nodes.size(); i++){ // i=0
         vector<pair<vector<string>, double>> next_path_prob;
         next_path_prob.clear();
